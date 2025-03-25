@@ -1,8 +1,25 @@
 package com.joboffers.domain.offer;
 
+import com.joboffers.domain.offer.dto.OfferResponseDto;
 import org.junit.jupiter.api.Test;
 
-class OfferFacadeTest {
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+
+public class OfferFacadeTest {
+    @Test
+    public void should_fetch_jobs_from_remote_and_save_all_offers_when_repository_is_empty(){
+        //given
+        OfferFacade offerFacade = new OfferFacadeTestConfiguration().offerFacadeForTests();
+        assertThat(offerFacade.findAllOffers().isEmpty());
+        //when
+        List<OfferResponseDto> result= offerFacade.fetchAllOffersAndSaveAllIfNotExists();
+        //then
+        assertThat(result).hasSize(6);
+
+    }
     @Test
     public void should_save_4_offers_when_there_are_no_offers_in_database() {
 
