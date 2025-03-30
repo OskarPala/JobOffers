@@ -1,5 +1,6 @@
 package com.joboffers.domain.offer;
 
+import com.joboffers.domain.offer.dto.OfferRequestDto;
 import com.joboffers.domain.offer.dto.OfferResponseDto;
 import lombok.AllArgsConstructor;
 
@@ -22,6 +23,10 @@ public class OfferFacade {
                 .stream()
                 .map(OfferMapper::mapFromOfferToOfferDto)
                 .toList();
-
+    }
+    public OfferResponseDto saveOffer (OfferRequestDto requestDto){
+        final Offer offerToSave = OfferMapper.mapFromOfferDtoToOffer(requestDto);
+        final Offer save = offerRepository.save(offerToSave);
+        return OfferMapper.mapFromOfferToOfferDto(save);
     }
 }

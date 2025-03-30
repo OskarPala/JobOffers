@@ -32,7 +32,7 @@ class OfferService {
     private List<Offer> fetchOffers() {
         return offerFetcher.fetchOffers()
                 .stream()
-                .map(OfferMapper::mapFromJobOfferResponseToOffer)
+                .map(OfferMapper::mapFromOfferResponseToOffer)
                 .toList();
     }
 }

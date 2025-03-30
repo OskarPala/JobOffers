@@ -1,5 +1,6 @@
 package com.joboffers.domain.offer;
 
+import com.joboffers.domain.offer.dto.OfferRequestDto;
 import com.joboffers.domain.offer.dto.OfferResponseDto;
 import org.junit.jupiter.api.Test;
 
@@ -21,7 +22,17 @@ public class OfferFacadeTest {
 
     }
     @Test
-    public void should_save_4_offers_when_there_are_no_offers_in_database() {
+    public void should_save_3_offers_when_database_is_empty() {
+        //given
+        OfferFacade offerFacade = new OfferFacadeTestConfiguration().offerFacadeForTests();
+        assertThat(offerFacade.findAllOffers()).isEmpty();
+        //when
+        offerFacade.saveOffer(new OfferRequestDto("asd","qwe","123","asd1"));
+        offerFacade.saveOffer(new OfferRequestDto("asd","qwe","123","asd2"));
+        offerFacade.saveOffer(new OfferRequestDto("asd","qwe","123","asd3"));
+        List<OfferResponseDto> result = offerFacade.findAllOffers();
+        //then
+        assertThat(result).hasSize(3);
 
     }
     @Test
