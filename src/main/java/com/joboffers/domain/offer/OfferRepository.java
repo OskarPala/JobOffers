@@ -1,6 +1,7 @@
 package com.joboffers.domain.offer;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface OfferRepository {
     boolean existsByOfferUrl(String offerUrl);
@@ -10,4 +11,6 @@ public interface OfferRepository {
     Offer save(Offer offer);
 
     List<Offer> saveAll(List<Offer> offers);
+
+    Optional<Offer> findById(String id);
 }

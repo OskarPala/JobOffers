@@ -3,11 +3,13 @@ package com.joboffers.domain.offer;
 import com.joboffers.domain.offer.dto.JobOfferResponse;
 import com.joboffers.domain.offer.dto.OfferRequestDto;
 import com.joboffers.domain.offer.dto.OfferResponseDto;
+import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchThrowable;
 
 
 public class OfferFacadeTest {
@@ -65,12 +67,20 @@ public class OfferFacadeTest {
     }
 
     @Test
-    public void should_throw_duplicate_key_exception_when_with_offer_url_exist() {
-
+    public void should_throw_not_found_exception_when_offer_not_found() {
+    //given
+        OfferFacade offerFacade = new OfferFacadeTestConfiguration(List.of()).offerFacadeForTests();
+        assertThat(offerFacade.findAllOffers()).isEmpty();
+    //when
+        Throwable thrown = catchThrowable(()->offerFacade.findOfferById("100"));
+    //then
+        AssertionsForClassTypes.assertThat(thrown)
+                .isInstanceOf(OfferNotFoundException.class)
+                .hasMessage("Offer with id 100 not found");
     }
 
     @Test
-    public void should_throw_not_found_exception_when_offer_not_found() {
+    public void should_throw_duplicate_key_exception_when_with_offer_url_exist() {
 
     }
 

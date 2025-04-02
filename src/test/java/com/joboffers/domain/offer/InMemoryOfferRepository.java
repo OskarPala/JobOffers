@@ -2,6 +2,7 @@ package com.joboffers.domain.offer;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -42,5 +43,10 @@ public class InMemoryOfferRepository implements OfferRepository {
         return offers.stream()
                 .map(this::save)
                 .toList();
+    }
+
+    @Override
+    public Optional<Offer> findById(final String id) {
+        return Optional.ofNullable(database.get(id));
     }
 }
