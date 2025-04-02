@@ -67,6 +67,24 @@ public class OfferFacadeTest {
     }
 
     @Test
+    public void should_find_offer_by_id_when_offer_was_saved() {
+        //given
+        OfferFacade offerFacade = new OfferFacadeTestConfiguration(List.of()).offerFacadeForTests();
+        OfferResponseDto offerResponseDto = offerFacade.saveOffer(new OfferRequestDto("id", "junior", "1000", "job.com/1"));
+        //when
+        OfferResponseDto responseDto = offerFacade.findOfferById(offerResponseDto.id());
+        //then
+        assertThat(responseDto).isEqualTo(OfferResponseDto.builder()
+                .id(offerResponseDto.id())
+                .companyName("id")
+                .position("junior")
+                .salary("1000")
+                .offerUrl("job.com/1")
+                .build()
+        );
+    }
+
+    @Test
     public void should_throw_not_found_exception_when_offer_not_found() {
         //given
         OfferFacade offerFacade = new OfferFacadeTestConfiguration(List.of()).offerFacadeForTests();
@@ -96,16 +114,5 @@ public class OfferFacadeTest {
                 .hasMessage("Offer with offerUrl [job.com/1] already exists");
 
     }
-
-    @Test
-    public void should_fetch_from_jobs_from_remote_and_save_all_offers_when_repository_is_empty() {
-
-    }
-
-    @Test
-    public void should_find_offer_by_id_when_offer_was_saved() {
-
-    }
-
 }
 
