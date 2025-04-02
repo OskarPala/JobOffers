@@ -68,19 +68,32 @@ public class OfferFacadeTest {
 
     @Test
     public void should_throw_not_found_exception_when_offer_not_found() {
-    //given
+        //given
         OfferFacade offerFacade = new OfferFacadeTestConfiguration(List.of()).offerFacadeForTests();
         assertThat(offerFacade.findAllOffers()).isEmpty();
-    //when
-        Throwable thrown = catchThrowable(()->offerFacade.findOfferById("100"));
-    //then
+        //when
+        Throwable thrown = catchThrowable(() -> offerFacade.findOfferById("100"));
+        //then
         AssertionsForClassTypes.assertThat(thrown)
                 .isInstanceOf(OfferNotFoundException.class)
                 .hasMessage("Offer with id 100 not found");
     }
 
     @Test
-    public void should_throw_duplicate_key_exception_when_with_offer_url_exist() {
+    public void should_throw_duplicate_key_exception_when_offer_with_this_url_exist() {
+        //given
+        OfferFacade offerFacade = new OfferFacadeTestConfiguration(List.of()).offerFacadeForTests();
+        OfferResponseDto offerResponseDto = offerFacade.saveOffer(new OfferRequestDto("id", "asd", "9999", "job.com/1"));
+        String saveId = offerResponseDto.id();
+        assertThat(offerFacade.findOfferById(saveId).id()).isEqualTo(saveId);
+        //when
+        Throwable thrown = catchThrowable(() -> offerFacade.saveOffer(
+                new OfferRequestDto("id", "asd", "9999", "job.com/1")));
+
+        //then
+        AssertionsForClassTypes.assertThat(thrown)
+                .isInstanceOf(OfferDuplicateException.class)
+                .hasMessage("Offer with offerUrl [job.com/1] already exists");
 
     }
 
