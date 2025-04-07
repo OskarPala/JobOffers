@@ -1,4 +1,4 @@
-package com.joboffers;
+package com.joboffers.domain;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
