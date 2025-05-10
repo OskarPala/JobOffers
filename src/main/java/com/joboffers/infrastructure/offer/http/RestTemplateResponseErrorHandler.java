@@ -10,7 +10,7 @@ import java.io.IOException;
 import static org.springframework.http.HttpStatus.Series.CLIENT_ERROR;
 import static org.springframework.http.HttpStatus.Series.SERVER_ERROR;
 
-class RestTemplateResponseErrorHandler extends DefaultResponseErrorHandler {
+public class RestTemplateResponseErrorHandler extends DefaultResponseErrorHandler {
     @Override
     public void handleError(ClientHttpResponse httpResponse) throws IOException {
         final HttpStatus statusCode = (HttpStatus) httpResponse.getStatusCode();
