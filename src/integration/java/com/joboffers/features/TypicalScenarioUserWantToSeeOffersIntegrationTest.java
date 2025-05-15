@@ -1,13 +1,11 @@
 package com.joboffers.features;
 
-import com.github.tomakehurst.wiremock.client.WireMock;
 import com.joboffers.BaseIntegrationTest;
 import com.joboffers.SampleJobOffersResponse;
 import com.joboffers.domain.offer.OfferFetchable;
 import com.joboffers.domain.offer.dto.JobOfferResponse;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 
 import java.util.List;
 
@@ -16,15 +14,16 @@ public class TypicalScenarioUserWantToSeeOffersIntegrationTest extends BaseInteg
     @Autowired
     OfferFetchable offerHttpClient;
 
+
     @Test
     public void user_want_to_see_offers_but_have_to_be_logged_in_and_external_server_should_have_some_offers() throws Exception {
         //step 1: there are no offers in external HTTP server
-
-        wireMockServer.stubFor(WireMock.get("/offers")
-                .willReturn(WireMock.aResponse()
-                        .withStatus(HttpStatus.OK.value())
-                        .withHeader("Content-Type", "application/json")
-                        .withBody(bodyWithZeroOffersJson())));
+//
+//        wireMockServer.stubFor(WireMock.get("/offers")
+//                .willReturn(WireMock.aResponse()
+//                        .withStatus(HttpStatus.OK.value())
+//                        .withHeader("Content-Type", "application/json")
+//                        .withBody(bodyWithZeroOffersJson())));
 
 
         List<JobOfferResponse> jobOfferResponses = offerHttpClient.fetchOffers();
