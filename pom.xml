@@ -83,11 +83,17 @@
             <version>${wiremock-jre8.version}</version>
             <scope>test</scope>
         </dependency>
-        <!--        LOOMBOOK-->
+        <!--LOOMBOOK-->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <version>1.18.22</version>
+            <optional>true</optional>
+        </dependency>
+        <!-- CONFIGURATION_PROPERTIES -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
             <optional>true</optional>
         </dependency>
     </dependencies>
@@ -106,6 +112,13 @@
                         </exclude>
                     </excludes>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+               <configuration>
+                   <proc>none</proc>
+               </configuration>
             </plugin>
         </plugins>
     </build>

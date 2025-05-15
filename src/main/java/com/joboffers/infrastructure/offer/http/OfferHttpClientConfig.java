@@ -1,6 +1,7 @@
 package com.joboffers.infrastructure.offer.http;
 
 import com.joboffers.domain.offer.OfferFetchable;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
@@ -9,8 +10,10 @@ import org.springframework.web.client.RestTemplate;
 
 import java.time.Duration;
 
+@AllArgsConstructor
 @Configuration
 public class OfferHttpClientConfig {
+
     @Bean
     public RestTemplateResponseErrorHandler restTemplateResponseErrorHandler() {
         return new RestTemplateResponseErrorHandler();
