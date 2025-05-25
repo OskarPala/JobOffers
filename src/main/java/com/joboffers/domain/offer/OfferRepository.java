@@ -5,6 +5,7 @@ import java.util.Optional;
 
 public interface OfferRepository {
     boolean existsByOfferUrl(String offerUrl);
+    Optional<Offer> findByOfferUrl(String offerUrl);
 
     List<Offer> findAll();
 
