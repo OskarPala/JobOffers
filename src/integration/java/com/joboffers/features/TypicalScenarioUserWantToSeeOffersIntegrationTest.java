@@ -3,14 +3,10 @@ package com.joboffers.features;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.joboffers.BaseIntegrationTest;
 import com.joboffers.SampleJobOffersResponse;
-import com.joboffers.domain.offer.OfferFetchable;
-import com.joboffers.domain.offer.dto.JobOfferResponse;
-import com.joboffers.infrastructure.scheduler.HttpOffersScheduler;
+import com.joboffers.infrastructure.offer.scheduler.HttpOffersScheduler;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-
-import java.util.List;
 
 public class TypicalScenarioUserWantToSeeOffersIntegrationTest extends BaseIntegrationTest implements SampleJobOffersResponse {
 
@@ -25,7 +21,7 @@ public class TypicalScenarioUserWantToSeeOffersIntegrationTest extends BaseInteg
                 .willReturn(WireMock.aResponse()
                         .withStatus(HttpStatus.OK.value())
                         .withHeader("Content-Type", "application/json")
-                        .withBody(bodyWithZeroOffersJson())));
+                        .withBody(bodyWithFourOffersJson())));
 
 
 
