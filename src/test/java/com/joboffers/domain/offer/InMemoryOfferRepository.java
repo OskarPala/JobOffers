@@ -8,19 +8,26 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class InMemoryOfferRepository implements OfferRepository {
     Map<String, Offer> database = new ConcurrentHashMap<>();
+
     @Override
     public boolean existsByOfferUrl(String offerUrl) {
-      long count = database.values()
-              .stream()
-              .filter(offer -> offer.offerUrl().equals(offerUrl))
-              .count();
-        return count ==1;
+        long count = database.values()
+                .stream()
+                .filter(offer -> offer.offerUrl().equals(offerUrl))
+                .count();
+        return count == 1;
+    }
+
+    @Override
+    public Optional<Offer> findByOfferUrl(final String offerUrl) {
+        return Optional.of(database.get(offerUrl));
     }
 
     @Override
     public List<Offer> findAll() {
         return database.values().stream().toList();
     }
+
     @Override
     public Offer save(Offer entity) {
         if (database.values().stream().anyMatch(offer -> offer.offerUrl().equals(entity.offerUrl()))) {
