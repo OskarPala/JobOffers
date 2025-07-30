@@ -1,4 +1,4 @@
-package com.joboffers.infrastructure.offer.offer;
+package com.joboffers.infrastructure.offer.controller;
 
 import com.joboffers.domain.offer.OfferFacade;
 import com.joboffers.domain.offer.dto.OfferResponseDto;
