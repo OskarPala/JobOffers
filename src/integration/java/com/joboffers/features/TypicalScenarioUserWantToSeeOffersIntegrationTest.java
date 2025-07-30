@@ -27,7 +27,7 @@ public class TypicalScenarioUserWantToSeeOffersIntegrationTest extends BaseInteg
     @Test
     public void user_want_to_see_offers_but_have_to_be_logged_in_and_external_server_should_have_some_offers() throws Exception {
         //step 1: there are no offers in external HTTP server
-
+        //given && when && then
         wireMockServer.stubFor(WireMock.get("/offers")
                 .willReturn(WireMock.aResponse()
                         .withStatus(HttpStatus.OK.value())
@@ -36,9 +36,9 @@ public class TypicalScenarioUserWantToSeeOffersIntegrationTest extends BaseInteg
 
 
         //step 2: scheduler ran 1st time and made GET to external server and system added 0 offers to database
-//        given && when
+        //given && when
         List<OfferResponseDto> newOffers = httpOffersScheduler.fetchAllOffersAndSaveAllIfNotExists();
-//then
+        //then
         assertThat(newOffers).isEmpty();
 
 
@@ -49,18 +49,20 @@ public class TypicalScenarioUserWantToSeeOffersIntegrationTest extends BaseInteg
 
 
         //step 7: user made GET /offers with header “Authorization: Bearer AAAA.BBBB.CCC” and system returned OK(200) with 0 offers
-//        given
+        //given
         String offersUrl = "/offers";
-//        when
+        //when
         ResultActions perform = mockMvc.perform(get(offersUrl)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
         );
-//        then
+        //then
         MvcResult mvcResult2 = perform.andExpect(status().isOk()).andReturn();
         String jsonWithOffers = mvcResult2.getResponse().getContentAsString();
         List<OfferResponseDto> offers = objectMapper.readValue(jsonWithOffers, new TypeReference<>() {
         });
         assertThat(offers).isEmpty();
+
+
         //step 8: there are 2 new offers in external HTTP server
         //step 9: scheduler ran 2nd time and made GET to external server and system added 2 new offers with ids: 1000 and 2000 to database
         //step 10: user made GET /offers with header “Authorization: Bearer AAAA.BBBB.CCC” and system returned OK(200) with 2 offers with ids: 1000 and 2000
