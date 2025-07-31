@@ -8,7 +8,6 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
@@ -47,6 +46,7 @@ public class OfferHttpClient implements OfferFetchable {
             return Collections.emptyList();
         }
     }
+
     private String getUrlForService(String service) {
         return uri + ":" + port + service;
     }
