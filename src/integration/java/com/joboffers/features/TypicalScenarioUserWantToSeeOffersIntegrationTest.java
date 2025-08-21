@@ -16,7 +16,9 @@ import org.springframework.test.web.servlet.ResultActions;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -86,6 +88,48 @@ public class TypicalScenarioUserWantToSeeOffersIntegrationTest extends BaseInteg
         //step 13: there are 2 new offers in external HTTP server
         //step 14: scheduler ran 3rd time and made GET to external server and system added 2 new offers with ids: 3000 and 4000 to database
         //step 15: user made GET /offers with header “Authorization: Bearer AAAA.BBBB.CCC” and system returned OK(200) with 4 offers with ids: 1000,2000, 3000 and 4000
+        //step 16: user made POST /offers with header “Authorization: Bearer AAAA.BBBB.CCC” and offer as body and system returned CREATED(201) with saved offer
+
+        //given
+        //when
+        ResultActions performPostOneOfferFromUser = mockMvc.perform(post("/offers")
+                .content("""
+                        {
+                        "companyName": "company",
+                        "position": "position",
+                        "salary": "5 000 - 8 000 PLN",
+                        "offerUrl": "https://offers.pl/offer/1234"
+                        }
+                        """)
+                .contentType(MediaType.APPLICATION_JSON + ";charset=UTF-8")
+        );
+        //then
+        String savedOfferJson = performPostOneOfferFromUser.andExpect(status().isCreated())
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+        OfferResponseDto parsedSavedOfferJson = objectMapper.readValue(savedOfferJson, OfferResponseDto.class);
+        String id = parsedSavedOfferJson.id();
+        assertAll(
+                () -> assertThat(parsedSavedOfferJson.offerUrl()).isEqualTo("https://offers.pl/offer/1234"),
+                () -> assertThat(parsedSavedOfferJson.companyName()).isEqualTo("company"),
+                () -> assertThat(parsedSavedOfferJson.salary()).isEqualTo("5 000 - 8 000 PLN"),
+                () -> assertThat(parsedSavedOfferJson.position()).isEqualTo("position"),
+                () -> assertThat(id).isNotNull()
+        );
+        //step 17: user made GET /offers with header “Authorization: Bearer AAAA.BBBB.CCC” and system returned OK(200) with 1 offer
+        //given & when
+        ResultActions performGetOffers = mockMvc.perform(get("/offers")
+                .contentType(MediaType.APPLICATION_JSON));
+        //then
+        String newOfferJson = performGetOffers.andExpect(status().isOk())
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+        List<OfferResponseDto> parsedJsonWithOneOffer = objectMapper.readValue(newOfferJson, new TypeReference<>() {
+        });
+        assertThat(parsedJsonWithOneOffer).hasSize(1);
+        assertThat(parsedJsonWithOneOffer.stream().map(OfferResponseDto::id)).contains(id);
     }
 }
 
