@@ -4,5 +4,5 @@ import org.springframework.http.HttpStatus;
 
 import java.util.List;
 
-record OfferPostErrorResponse(List<String> messages, HttpStatus status) {
+public record OfferPostErrorResponse(List<String> messages, HttpStatus status) {
 }

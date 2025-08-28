@@ -1,10 +1,12 @@
 package com.joboffers.controller.error;
 
 import com.joboffers.BaseIntegrationTest;
+import com.joboffers.infrastructure.offer.controller.error.OfferPostErrorResponse;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -12,7 +14,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class OfferUrlDuplicateErrorIntegrationTest extends BaseIntegrationTest {
     @Test
     public void should_return_409_conflict_when_added_second_offer_with_same_offer_url() throws Exception {
-//step1
+//step1: User make POST request with valid JSON format and system return status 201 with offer
 //given & when
         ResultActions perform1 = mockMvc.perform(post("/offers")
                 .content("""
@@ -26,7 +28,7 @@ public class OfferUrlDuplicateErrorIntegrationTest extends BaseIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON + ";charset=UTF-8"));
 //then
         perform1.andExpect(status().isCreated());
-//step2
+//step2: User make POST request with valid JSON format,but offerUrl is duplicated and system return 409 with error message
 //given && when
         ResultActions perform2 = mockMvc.perform(post("/offers")
                 .content("""
@@ -38,7 +40,13 @@ public class OfferUrlDuplicateErrorIntegrationTest extends BaseIntegrationTest {
                         }
                         """)
                 .contentType(MediaType.APPLICATION_JSON + ";charset=UTF-8"));
+        String errorResponse = perform2.andExpect(status().isConflict())
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+        OfferPostErrorResponse parsedResponseJson = objectMapper.readValue(errorResponse, OfferPostErrorResponse.class);
 //then
-        perform2.andExpect(status().isConflict());
+        assertThat(parsedResponseJson.messages())
+                .contains("Offer url already exists");
     }
 }
