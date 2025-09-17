@@ -67,8 +67,39 @@ public class TypicalScenarioUserWantToSeeOffersIntegrationTest extends BaseInteg
 
 
         //step 8: there are 2 new offers in external HTTP server
+        //given && when && then
+        wireMockServer.stubFor(WireMock.get("/offers")
+                .willReturn(WireMock.aResponse()
+                        .withStatus(HttpStatus.OK.value())
+                        .withHeader("Content-Type", "application/json")
+                        .withBody(bodyWithTwoOffersJson())));
+
+
         //step 9: scheduler ran 2nd time and made GET to external server and system added 2 new offers with ids: 1000 and 2000 to database
+        //given && when
+        List<OfferResponseDto> twoNewOffers = httpOffersScheduler.fetchAllOffersAndSaveAllIfNotExists();
+        //then
+        assertThat(twoNewOffers).hasSize(2);
+
         //step 10: user made GET /offers with header “Authorization: Bearer AAAA.BBBB.CCC” and system returned OK(200) with 2 offers with ids: 1000 and 2000
+        //given && when
+        ResultActions performForTwoOffers = mockMvc.perform(get(offersUrl)
+                .contentType(MediaType.APPLICATION_JSON)
+        );
+        //then
+        MvcResult performGetForTwoOffersMvcResult = performForTwoOffers.andExpect(status().isOk()).andReturn();
+        String jsonWithTwoOffers = performGetForTwoOffersMvcResult.getResponse().getContentAsString();
+
+        List<OfferResponseDto> twoOffers = objectMapper.readValue(jsonWithTwoOffers, new TypeReference<>() {
+        });
+        assertThat(twoOffers).hasSize(2);
+        OfferResponseDto firstExpectedOffer = twoNewOffers.get(0);
+        OfferResponseDto secondExpectedOffer = twoNewOffers.get(1);
+        assertThat(twoOffers).containsExactlyInAnyOrder(
+                new OfferResponseDto(firstExpectedOffer.id(), firstExpectedOffer.companyName(), firstExpectedOffer.position(),firstExpectedOffer.salary(),firstExpectedOffer.offerUrl()),
+                new OfferResponseDto(secondExpectedOffer.id(), secondExpectedOffer.companyName(), secondExpectedOffer.position(),secondExpectedOffer.salary(),secondExpectedOffer.offerUrl())
+        );
+
         //step 11: user made GET /offers/9999 and system returned NOT_FOUND(404) with message “Offer with id 9999 not found”
         //given
         //when
