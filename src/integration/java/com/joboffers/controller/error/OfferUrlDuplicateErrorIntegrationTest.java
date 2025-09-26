@@ -4,7 +4,12 @@ import com.joboffers.BaseIntegrationTest;
 import com.joboffers.infrastructure.offer.controller.error.OfferPostErrorResponse;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.servlet.ResultActions;
+import org.testcontainers.containers.MongoDBContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.utility.DockerImageName;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -12,6 +17,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 
 public class OfferUrlDuplicateErrorIntegrationTest extends BaseIntegrationTest {
+    @Container
+    public static final MongoDBContainer mongoDBContainer = new MongoDBContainer(DockerImageName.parse("mongo:4.4.4"));
+
+    @DynamicPropertySource
+    public static void propertyOverride(DynamicPropertyRegistry registry) {
+        registry.add("spring.data.mongodb.uri", mongoDBContainer::getReplicaSetUrl);
+    }
+
     @Test
     public void should_return_409_conflict_when_added_second_offer_with_same_offer_url() throws Exception {
 //step1: User make POST request with valid JSON format and system return status 201 with offer
