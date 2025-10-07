@@ -2,6 +2,7 @@ package com.joboffers.infrastructure.offer.http;
 
 import com.joboffers.domain.offer.OfferFetchable;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -9,11 +10,8 @@ import org.springframework.web.client.RestTemplate;
 
 import java.time.Duration;
 
-@AllArgsConstructor
 @Configuration
 public class OfferHttpClientConfig {
-
-    private final OfferHttpClientConfigProperties properties;
 
     @Bean
     public RestTemplateResponseErrorHandler restTemplateResponseErrorHandler() {
@@ -21,18 +19,20 @@ public class OfferHttpClientConfig {
     }
 
     @Bean
-    public RestTemplate restTemplate(OfferHttpClientConfigProperties properties,
+    public RestTemplate restTemplate(@Value("1000") long connectionTimeout,
+                                     @Value("1000") long readTimeout,
                                      RestTemplateResponseErrorHandler restTemplateResponseErrorHandler) {
         return new RestTemplateBuilder()
                 .errorHandler(restTemplateResponseErrorHandler)
-                .setConnectTimeout(Duration.ofMillis(properties.connectionTimeout()))
-                .setReadTimeout(Duration.ofMillis(properties.readTimeout()))
+                .setConnectTimeout(Duration.ofMillis(connectionTimeout))
+                .setReadTimeout(Duration.ofMillis(readTimeout))
                 .build();
     }
 
     @Bean
-    public OfferFetchable remoteOfferClient(OfferHttpClientConfigProperties properties, RestTemplate restTemplate
-    ) {
-        return new OfferHttpClient(restTemplate, properties.uri(), properties.port());
+    public OfferFetchable remoteOfferClient(RestTemplate restTemplate,
+                                            @Value("http://ec2-3-127-218-34.eu-central-1.compute.amazonaws.com") String uri,
+                                            @Value("5057") int port) {
+        return new OfferHttpClient(restTemplate, uri, port);
     }
 }
