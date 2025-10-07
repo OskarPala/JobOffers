@@ -7,7 +7,7 @@ import org.springframework.web.client.RestTemplate;
 import static com.joboffers.BaseIntegrationTest.WIRE_MOCK_HOST;
 
 public class OfferHttpClientTestConfig extends OfferHttpClientConfig {
-    public OfferFetchable remoteOfferTestConfiguration(int port, int connectionTimeout, int readTimeout) {
+    public OfferFetchable remoteOfferTestClient(int port, int connectionTimeout, int readTimeout) {
         final RestTemplate restTemplate = restTemplate(connectionTimeout, readTimeout, restTemplateResponseErrorHandler());
         return remoteOfferClient(restTemplate, WIRE_MOCK_HOST, port);
     }
