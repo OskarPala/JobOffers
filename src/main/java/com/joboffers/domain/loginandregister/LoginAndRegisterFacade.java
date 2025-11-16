@@ -5,8 +5,10 @@ import com.joboffers.domain.loginandregister.dto.RegisterUserDto;
 import com.joboffers.domain.loginandregister.dto.RegistrationResultDto;
 import com.joboffers.domain.loginandregister.dto.UserDto;
 import lombok.AllArgsConstructor;
+import org.springframework.context.annotation.Configuration;
 
 @AllArgsConstructor
+@Configuration
 public class LoginAndRegisterFacade {
     private static final String USER_NOT_FOUND = "User not found";
 
