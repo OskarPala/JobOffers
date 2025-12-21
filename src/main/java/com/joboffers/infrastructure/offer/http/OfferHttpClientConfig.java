@@ -31,8 +31,9 @@ public class OfferHttpClientConfig {
 
     @Bean
     public OfferFetchable remoteOfferClient(RestTemplate restTemplate,
-                                            @Value("http://ec2-3-127-218-34.eu-central-1.compute.amazonaws.com") String uri,
-                                            @Value("5057") int port) {
+                                            @Value("${offer.http.client.config.uri:http://ec2-3-127-218-34.eu-central-1.compute.amazonaws.com}"
+                                            ) String uri,
+                                            @Value("${offer.http.client.config.port:5057}") int port) {
         return new OfferHttpClient(restTemplate, uri, port);
     }
 }
