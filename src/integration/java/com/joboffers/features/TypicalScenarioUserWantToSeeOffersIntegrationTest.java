@@ -28,7 +28,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -111,11 +110,11 @@ public class TypicalScenarioUserWantToSeeOffersIntegrationTest extends BaseInteg
         //then
         MvcResult registerActionResult = registerAction.andExpect(status().isCreated()).andReturn();
         String registerActionResultJson = registerActionResult.getResponse().getContentAsString();
-         RegistrationResultDto registrationResultDto = objectMapper.readValue(registerActionResultJson, RegistrationResultDto.class);
+        RegistrationResultDto registrationResultDto = objectMapper.readValue(registerActionResultJson, RegistrationResultDto.class);
         assertAll(
-                ()-> assertThat(registrationResultDto.username()).isEqualTo("someUser"),
-                ()-> assertThat(registrationResultDto.created()).isTrue(),
-                ()-> assertThat(registrationResultDto.id()).isNotNull()
+                () -> assertThat(registrationResultDto.username()).isEqualTo("someUser"),
+                () -> assertThat(registrationResultDto.created()).isTrue(),
+                () -> assertThat(registrationResultDto.id()).isNotNull()
 
         );
 
