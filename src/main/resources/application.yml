@@ -14,7 +14,7 @@ offer:
         connectionTimeout: 1000
         port: 5057
         readTimeout: 1000
-        uri: http://ec2-3-127-218-34.eu-central-1.compute.amazonaws.com
+        uri: http://ec2-18-194-181-208.eu-central-1.compute.amazonaws.com
 http:
   offers:
     scheduler:
