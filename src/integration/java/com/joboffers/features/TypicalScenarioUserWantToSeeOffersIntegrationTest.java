@@ -86,7 +86,6 @@ public class TypicalScenarioUserWantToSeeOffersIntegrationTest extends BaseInteg
                           "status": "UNAUTHORIZED"
                         }
                         """.trim()));
-
         //step 4: user made GET /offers with no jwt token and system returned UNAUTHORIZED(401)
         //given & when
         ResultActions failedGetOffersRequest = mockMvc.perform(get("/offers")
@@ -145,8 +144,10 @@ public class TypicalScenarioUserWantToSeeOffersIntegrationTest extends BaseInteg
         String offersUrl = "/offers";
         //when
         ResultActions perform = mockMvc.perform(get(offersUrl)
+                .header("Authorization", "Bearer " + token)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
         );
+
         //then
         MvcResult mvcResult2 = perform.andExpect(status().isOk()).andReturn();
         String jsonWithOffers = mvcResult2.getResponse().getContentAsString();
@@ -173,6 +174,7 @@ public class TypicalScenarioUserWantToSeeOffersIntegrationTest extends BaseInteg
         //step 10: user made GET /offers with header “Authorization: Bearer AAAA.BBBB.CCC” and system returned OK(200) with 2 offers with ids: 1000 and 2000
         //given && when
         ResultActions performForTwoOffers = mockMvc.perform(get(offersUrl)
+                .header("Authorization", "Bearer " + token)
                 .contentType(MediaType.APPLICATION_JSON)
         );
         //then
@@ -192,7 +194,9 @@ public class TypicalScenarioUserWantToSeeOffersIntegrationTest extends BaseInteg
         //step 11: user made GET /offers/9999 and system returned NOT_FOUND(404) with message “Offer with id 9999 not found”
         //given
         //when
-        ResultActions performGetOfferWithNotExistingId = mockMvc.perform(get("/offers/9999"));
+        ResultActions performGetOfferWithNotExistingId = mockMvc.perform(get("/offers/9999")
+                .header("Authorization", "Bearer " + token)
+                .contentType(MediaType.APPLICATION_JSON_VALUE));
 
         //then
         performGetOfferWithNotExistingId.andExpect(status().isNotFound())
@@ -209,6 +213,7 @@ public class TypicalScenarioUserWantToSeeOffersIntegrationTest extends BaseInteg
         String offerIdAddedToDatabase = firstExpectedOffer.id();
         //when
         ResultActions getOfferById = mockMvc.perform(get("/offers/" + offerIdAddedToDatabase)
+                .header("Authorization", "Bearer " + token)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
         );
         //then
@@ -236,6 +241,7 @@ public class TypicalScenarioUserWantToSeeOffersIntegrationTest extends BaseInteg
         //step 15: user made GET /offers with header “Authorization: Bearer AAAA.BBBB.CCC” and system returned OK(200) with 4 offers with ids: 1000,2000, 3000 and 4000
         //given && when
         ResultActions performGetForFourOffers = mockMvc.perform(get(offersUrl)
+                .header("Authorization", "Bearer " + token)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
         );
         //then
@@ -255,6 +261,7 @@ public class TypicalScenarioUserWantToSeeOffersIntegrationTest extends BaseInteg
 
         //when
         ResultActions performPostOneOfferFromUser = mockMvc.perform(post("/offers")
+                .header("Authorization", "Bearer " + token)
                 .content("""
                         {
                         "companyName": "company",
@@ -282,6 +289,7 @@ public class TypicalScenarioUserWantToSeeOffersIntegrationTest extends BaseInteg
         //step 17: user made GET /offers with header “Authorization: Bearer AAAA.BBBB.CCC” and system returned OK(200) with 1 offer
         //given & when
         ResultActions performGetOffers = mockMvc.perform(get("/offers")
+                .header("Authorization", "Bearer " + token)
                 .contentType(MediaType.APPLICATION_JSON));
         //then
         String newOfferJson = performGetOffers.andExpect(status().isOk())
