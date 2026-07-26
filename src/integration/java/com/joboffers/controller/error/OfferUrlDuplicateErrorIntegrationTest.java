@@ -4,6 +4,7 @@ import com.joboffers.BaseIntegrationTest;
 import com.joboffers.infrastructure.offer.controller.error.OfferPostErrorResponse;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.servlet.ResultActions;
@@ -26,6 +27,7 @@ public class OfferUrlDuplicateErrorIntegrationTest extends BaseIntegrationTest {
     }
 
     @Test
+    @WithMockUser
     public void should_return_409_conflict_when_added_second_offer_with_same_offer_url() throws Exception {
 //step1: User make POST request with valid JSON format and system return status 201 with offer
 //given & when
