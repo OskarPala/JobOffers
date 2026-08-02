@@ -10,22 +10,22 @@ import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
-import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 @Configuration
 @EnableCaching
-@ConditionalOnProperty
+@ConditionalOnProperty(value = "spring.cache.type", havingValue = "redis")
 class RedisConfiguration {
     @Bean
-    public JedisConnectionFactory redisConnectionFactory(@Value("$REDIS_HOST:localhost")String hostname,
-                                                         @Value("$REDIS_PORT:6379")int port    ) {
-         RedisStandaloneConfiguration redisStandaloneConfiguration = new RedisStandaloneConfiguration(hostname, port);
-         return new JedisConnectionFactory(redisStandaloneConfiguration);
+    public JedisConnectionFactory redisConnectionFactory(@Value("${spring.redis.host}") String hostname,
+                                                         @Value("${spring.redis.port}") int port) {
+        RedisStandaloneConfiguration redisStandaloneConfiguration = new RedisStandaloneConfiguration(hostname, port);
+        return new JedisConnectionFactory(redisStandaloneConfiguration);
     }
+
     @Bean
-    public RedisTemplate<String,Object> redisTemplate(RedisConnectionFactory redisConnectionFactory) {
-        RedisTemplate<String,Object> redisTemplate = new RedisTemplate<>();
+    public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory redisConnectionFactory) {
+        RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
         redisTemplate.setConnectionFactory(redisConnectionFactory);
         redisTemplate.setKeySerializer(new StringRedisSerializer());
         redisTemplate.setValueSerializer(new GenericJackson2JsonRedisSerializer());
